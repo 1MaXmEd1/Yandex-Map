@@ -1,0 +1,30 @@
+.header{
+    display: flex;
+    background: rgb(218, 198, 19);
+    border-radius:10px 10px 0px 0px;
+}
+.textBoxLogo{
+    margin: auto;
+}
+.buttonGroup{
+    margin: 10px 10px 10px 10px;
+}
+.login:hover{
+    opacity: 0.8;
+}
+.login:active{
+    background: rgb(0, 0, 0);
+    color: white;
+}
+
+.logout{
+    background-color: black;
+    color: white;
+}
+.logout:hover{
+    opacity: 0.8;
+}
+.logout:active{
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}

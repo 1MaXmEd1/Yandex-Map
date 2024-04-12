@@ -28,6 +28,28 @@
   color: #61dafb;
 }
 
+.descriptionBlock{
+  background:rgba(255, 255, 255, 0.87);
+  display: flex;
+  height: 60px;
+}
+
+.descriptionText{
+  width: 1500px;
+  margin: auto;
+  text-align: center;
+  font-size: 18px;
+}
+
+.main{
+  margin: auto;
+}
+.mapBlock{
+  border-radius:0px 0px 0px 0px;
+  display: flex;
+  background: rgb(218, 198, 19);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

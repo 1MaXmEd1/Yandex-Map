@@ -1,0 +1,24 @@
+.conteinerList{
+    width: 400px;
+    height: 730px;
+    margin: 10px 5px 10px 10px;
+    background:rgb(255, 255, 255);
+    border-radius:5px
+}
+.listOfPlaces{
+    height: 654px;
+    width: 350px;
+    background:rgb(231, 231, 231);
+    border-radius: 5px;
+    margin: 5px 5px 5px 5px;
+}
+.liItems{
+    border: 1px dotted;
+    margin: auto;
+    margin-left: -14px;
+}
+.myMap{
+    width: 1700px;
+    height: 730px;
+    margin: 10px 10px 10px 10px;
+}
