@@ -1,7 +1,8 @@
 const userService = require("../service/user-service.js");
+const MarkModel = require("../models/mark-model.js");
 
 class Controllers {
-  async registration(req, res, next) {
+  async registration(req, res) {
     try {
       const { email, password } = req.body;
       const userData = await userService.registration(email, password);
@@ -11,10 +12,10 @@ class Controllers {
       });
       return res.json(userData);
     } catch (e) {
-      console.log(`Ошибка в запросе: ${e}`);
+      console.log(`Ошибка в запросе регистрации: ${e}`);
     }
   }
-  async login(req, res, next) {
+  async login(req, res) {
     try {
       const { email, password } = req.body;
       const userData = await userService.login(email, password);
@@ -24,7 +25,7 @@ class Controllers {
       });
       return res.json(userData);
     } catch (e) {
-      console.log(`Ошибка в запросе: ${e}`);
+      console.log(`Ошибка в запросе входа: ${e}`);
     }
   }
   async logout(req, res, next) {
@@ -34,10 +35,10 @@ class Controllers {
       res.clearCookie("refreshToken");
       return res.json(token);
     } catch (e) {
-      console.log(`Ошибка в запросе: ${e}`);
+      console.log(`Ошибка в запросе выхода: ${e}`);
     }
   }
-  async refresh(req, res, next) {
+  async refresh(req, res) {
     try {
       const { refreshToken } = req.cookies;
       const userData = await userService.refresh(refreshToken);
@@ -47,7 +48,7 @@ class Controllers {
       });
       return res.json(userData);
     } catch (e) {
-      console.log(`Ошибка в запросе: ${e}`);
+      console.log(`Ошибка в запросе ответа: ${e}`);
     }
   }
   async getUsers(req, res, next) {
@@ -55,60 +56,52 @@ class Controllers {
       const users = await userService.getAllUsers();
       return res.json(users);
     } catch (e) {
-      console.log(`Ошибка в запросе: ${e}`);
+      console.log(`Ошибка в запросе получения пользователей: ${e}`);
     }
   }
+  //подредачить получение из req
   async createMark(req, res) {
     try {
-      const { userId } = req.user;
-      const { name, coordinates } = req.body;
-
-      const mark = await MarkModel.create({ userId, name, coordinates });
+      const { userId } = req.body;
+      const { place } = req.body;
+      const name = place.name;
+      const x = place.x;
+      const y = place.y;
+      const mark = await MarkModel.create({ userId, name, x, y });
 
       return res.json(mark);
     } catch (e) {
-      console.error(`Ошибка в запросе: ${e}`);
+      console.error(`Ошибка в запросе создания: ${e}`);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
   async getMarks(req, res) {
     try {
-      const { userId } = req.user;
+      const { userId } = req.query;
       const marks = await MarkModel.find({ userId });
       return res.json(marks);
     } catch (e) {
-      console.error(`Ошибка в запросе: ${e}`);
+      console.error(`Ошибка в запросе получения: ${e}`);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
   async updateMark(req, res) {
     try {
-      const { userId } = req.user;
-      const { id } = req.params;
-      const { name, coordinates } = req.body;
-
-      const mark = await MarkModel.findByIdAndUpdate(
-        id,
-        { userId, name, coordinates },
-        { new: true }
-      );
-
-      return res.json(mark);
+      const { mark } = req.body;
+      const updatedMark = await MarkModel.findByIdAndUpdate(mark._id, mark, { new: true });
+      return res.json(updatedMark);
     } catch (e) {
-      console.error(`Ошибка в запросе: ${e}`);
+      console.error(`Ошибка в запросе обновления: ${e}`);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
   async deleteMark(req, res) {
     try {
-      const { userId } = req.user;
-      const { id } = req.params;
-
-      await MarkModel.findByIdAndDelete(id);
-
+      const { markId } = req.params;
+      await MarkModel.findByIdAndDelete(markId);
       return res.json({ message: "Метка успешно удалена" });
     } catch (e) {
-      console.error(`Ошибка в запросе: ${e}`);
+      console.error(`Ошибка в запросе удвления: ${e}`);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }

@@ -10,7 +10,7 @@ router.get("/refresh", controllers.refresh);
 router.get("/getUsers", adminAuth, controllers.getUsers);
 router.post("/marker", controllers.createMark);
 router.get("/marker", controllers.getMarks);
-router.put("/marker/:id", controllers.updateMark);
-router.delete("/marker/:id", controllers.deleteMark);
+router.put("/marker/:markId", controllers.updateMark);
+router.delete("/marker/:markId", controllers.deleteMark);
 
 module.exports = router;

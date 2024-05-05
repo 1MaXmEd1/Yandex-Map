@@ -13,19 +13,19 @@ export default class Services {
     return $api.post("/logout");
   }
 
-  static async getMarks() {
-    return $api.get("/marker");
+  static async getMarks(userId) {
+    return $api.get(`/marker?userId=${userId}`);
   }
 
-  static async createMark(userId, name, coordinates) {
-    return $api.post("/marker", {userId, name, coordinates});
+  static async createMark(userId, mark) {
+    return $api.post("/marker", { userId, mark });
   }
 
-  static async updateMark(userId, markId, name, coordinates) {
-    return $api.put("/marker/:id", {userId, markId, name, coordinates});
+  static async updateMark(mark) {
+    return $api.put(`/marker/${mark._id}`, { mark });
   }
 
-  static async deleteMark(userId, markId) {
-    return $api.delete("/marker/:id", {userId, markId});
+  static async deleteMark(markId) {
+    return $api.delete(`/marker/${markId}`);
   }
 }

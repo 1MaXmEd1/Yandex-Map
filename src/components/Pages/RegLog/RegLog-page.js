@@ -1,8 +1,7 @@
 import "./RegLog.css";
 import "./logBlock/BlockAuth.js";
-import BlockAuth from "./logBlock/BlockAuth.js";
 import Button from "../../Button/Button.js";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { Context } from "../../../index.js";
 
@@ -10,15 +9,11 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { store } = useContext(Context);
-
-  async function getMarks(){
-    try{
-      const response = await store.getMarks()
-      console.log(response)
-    }catch(e){
-      console.log(e)
-    }
-  }
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    await store.login(email, password);
+    navigate("/")
+  };
 
   return (
     <>
@@ -51,7 +46,7 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
           </div>
           <div className="btnBlock">
             {/* Нужно придумать как менять функцию у кнопки */}
-            <Button fun={() => store.login(email, password)}>
+            <Button fun={handleLogin}>
               {butt}
             </Button>
           </div>

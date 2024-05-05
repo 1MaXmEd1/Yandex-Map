@@ -41,7 +41,7 @@ export default class Store {
 
   async logout() {
     try {
-      const response = await Services.logout();
+      await Services.logout();
       localStorage.removeItem("token");
       this.setAuth(false);
       this.setUser({});
@@ -50,34 +50,52 @@ export default class Store {
     }
   }
 
-  async getMarks() {
-    try {
-      const response = await Services.getMarks();
-      console.log(response)
-      return response
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async createMark() {
-    try {
-      const response = await Services.createMark();
-      console.log(response)
-      return response
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   async checkAuth() {
     try {
-      const response = await axios.get(`${API_URL}/refresh`, {withCredentials: true})
+      const response = await axios.get(`${API_URL}/refresh`, {
+        withCredentials: true,
+      });
       localStorage.setItem("token", response.data.user);
       this.setAuth(true);
       this.setUser(response.data.user);
-      console.log(this.user, this.isAuth)
-      return response
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getMarks() {
+    try {
+      const response = await Services.getMarks(this.user.id);
+      return response.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async createMark(mark) {
+    try {
+      const response = await Services.createMark(this.user.id, mark);
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async updateMark(mark) {
+    try {
+      console.log(mark)
+      const response = await Services.updateMark(mark);
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  
+  async deleteMark(markId) {
+    try {
+      const response = await Services.deleteMark(markId);
+      return response;
     } catch (e) {
       console.log(e);
     }

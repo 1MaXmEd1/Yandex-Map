@@ -10,8 +10,7 @@ import {
 import { Context } from "../..";
 
 const MapBlock = () => {
-
-  const {store} = useContext(Context)
+  const { store } = useContext(Context);
 
   const [mapCentr, setmapCentr] = useState([55.75, 37.57]);
 
@@ -36,12 +35,12 @@ const MapBlock = () => {
     setmapCentr(position);
   };
 
-  const addPlacemarkInArray = () => {
+  const addPlacemarkInArray = async () => {
     if (place.name && place.x && place.y) {
       setPlace([...places, place]);
+      await store.createMark(place);
     }
     setNewPlace({ name: "", x: "", y: "" });
-    
   };
 
   const itemClick = (place) => {
@@ -66,24 +65,36 @@ const MapBlock = () => {
     setIsButtonHovered(false);
   };
 
-  const deletePlacemark = (palceToDelete) => {
-    const deletePlace = places.filter((place) => place !== palceToDelete);
+  const deletePlacemark = async (placeToDelete) => {
+    const deletePlace = places.filter((place) => place !== placeToDelete);
     setPlace(deletePlace);
+    await store.deleteMark(placeToDelete._id)
   };
 
-  const editPlacemark = (index) => {
-    setNewPlace(places[index]);
+  const editPlacemark = (place, index) => {
+    setNewPlace(place);
     setEditIndex(index);
   };
 
-  const saveEditRecord = () => {
+  const saveEditRecord = async () => {
     if (place.name && place.x && place.y) {
       const updatedPlaces = [...places];
       updatedPlaces[editIndex] = place;
       setPlace(updatedPlaces);
+      await store.updateMark(place);
       setEditIndex(null);
     }
     setNewPlace({ name: "", x: "", y: "" });
+  };
+
+  const getMarks = async () => {
+    try {
+      const response = await store.getMarks();
+      console.log(response)
+      setPlace(response)
+    } catch (e) {
+      console.log("Получение маркеров. Неудача" + e);
+    }
   };
 
   return (
@@ -117,6 +128,7 @@ const MapBlock = () => {
         ) : (
           <button onClick={addPlacemarkInArray}>Добавить</button>
         )}
+        <button onClick={getMarks}>Получить маркера</button>
         <ol className="listOfPlaces">
           {places.map((place, index) => (
             <div
@@ -132,7 +144,7 @@ const MapBlock = () => {
                   <button
                     onMouseEnter={handleButtonMouseEnter}
                     onMouseLeave={handleButtonMouseLeave}
-                    onClick={() => editPlacemark(index)}
+                    onClick={() => editPlacemark(place, index)}
                   >
                     Редактировать
                   </button>

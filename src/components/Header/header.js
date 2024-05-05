@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Context } from "../..";
 import Button from "../Button/Button";
-import "./Header.css";
+import "./header.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
@@ -9,12 +9,12 @@ export default function Header() {
   const navigate = useNavigate();
 
   const { store } = useContext(Context);
-  
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      store.checkAuth();
-    }
-  }, []);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
+
+  const handleLogout = async () => {
+    await store.logout();
+    setIsLoggedOut(true);
+  };
 
   return (
     <header className="header">
@@ -23,11 +23,11 @@ export default function Header() {
       </div>
 
       <section className="buttonGroup">
-        {store.isAuth
+        {store.isAuth && !isLoggedOut
           ? `Добро пожаловать ${store.user.email}`
           : "Авторизуйтесь!"}
-        {store.isAuth ? (
-          <Button className="logout" fun={() => store.logout()}>Выйти</Button>
+        {store.isAuth && !isLoggedOut ? (
+          <Button className="logout" fun={handleLogout}>Выйти</Button>
         ) : (
           <Button
             fun={() => navigate("login", { replace: false })}
