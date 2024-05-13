@@ -1,51 +1,54 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./MapBlock.css";
-import Input from "../Input/Input.js";
+import Input from "../input/Input.js";
 import {
   YMaps,
   Map,
   GeolocationControl,
   Placemark,
 } from "@pbe/react-yandex-maps";
-import { Context } from "../..";
+import { Context } from "../../index.js";
 
 const MapBlock = () => {
   const { store } = useContext(Context);
-
-  const [mapCentr, setmapCentr] = useState([55.75, 37.57]);
-
-  const [places, setPlace] = useState([]);
-
+  const [mapCentr, setMapCentr] = useState([55.75, 37.57]);
+  const [balloonContent, setBalloonContent] = useState(null);
   const [place, setNewPlace] = useState({
     name: "",
     x: "",
     y: "",
   });
-
-  const [balloonContent, setBalloonContent] = useState(null);
-
+  const [places, setPlace] = useState([]);
   const [isHovered, setIsHovered] = useState(null);
-
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const [editIndex, setEditIndex] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleGeoClick = (event) => {
     const position = event.get("geoObjects");
-    setmapCentr(position);
+    setMapCentr(position);
   };
 
-  const addPlacemarkInArray = async () => {
-    if (place.name && place.x && place.y) {
-      setPlace([...places, place]);
-      await store.createMark(place);
+  const itemClick = () => {
+    if (isButtonHovered == true) {
+      setMapCentr([place.x, place.y]);
     }
-    setNewPlace({ name: "", x: "", y: "" });
   };
 
-  const itemClick = (place) => {
-    if (!isButtonHovered) {
-      setmapCentr([place.x, place.y]);
+  const addPlacemarkInArray = () => {
+    if (!isNaN(place.x) && !isNaN(place.y)) {
+      if (place.name && place.x && place.y) {
+        setPlace([...places, place]);
+        store.createMark(place);
+
+        setNewPlace({ name: "", x: "", y: "" });
+      } else {
+        alert("Ошибка: Введите корректные данные для X и Y.");
+      }
+    } else {
+      alert("Ошибка: X и Y должны быть числами.");
     }
   };
 
@@ -65,10 +68,10 @@ const MapBlock = () => {
     setIsButtonHovered(false);
   };
 
-  const deletePlacemark = async (placeToDelete) => {
+  const deletePlacemark = (placeToDelete) => {
     const deletePlace = places.filter((place) => place !== placeToDelete);
     setPlace(deletePlace);
-    await store.deleteMark(placeToDelete._id)
+    store.deleteMark(placeToDelete._id);
   };
 
   const editPlacemark = (place, index) => {
@@ -77,89 +80,118 @@ const MapBlock = () => {
   };
 
   const saveEditRecord = async () => {
-    if (place.name && place.x && place.y) {
-      const updatedPlaces = [...places];
-      updatedPlaces[editIndex] = place;
-      setPlace(updatedPlaces);
-      await store.updateMark(place);
-      setEditIndex(null);
+    if (!isNaN(place.x) && !isNaN(place.y)) {
+      if (place.name && place.x && place.y) {
+        const updatedPlaces = [...places];
+        updatedPlaces[editIndex] = place;
+        setPlace(updatedPlaces);
+        await store.updateMark(place);
+        setEditIndex(null);
+
+        setNewPlace({ name: "", x: "", y: "" });
+      }
+    } else {
+      alert("Ошибка: X и Y должны быть числами.");
     }
-    setNewPlace({ name: "", x: "", y: "" });
   };
 
   const getMarks = async () => {
     try {
-      const response = await store.getMarks();
-      console.log(response)
-      setPlace(response)
+      setIsLoading(true);
+      const response = await store.getMarks(store.user.id);
+      setPlace(response);
+      setIsLoading(false);
     } catch (e) {
       console.log("Получение маркеров. Неудача" + e);
     }
   };
 
+  useEffect(() => {
+    if (store.user.isAuth) {
+      getMarks();
+    } else {
+      console.log("Залогиньтесь!");
+      setPlace([])
+    }
+  }, [store.user.isAuth]);
+
   return (
     <>
       <div className="conteinerList">
-        <section>
-          <Input
-            id={"nameP"}
-            value={place.name}
-            onChange={(e) => setNewPlace({ ...place, name: e.target.value })}
-          >
-            Название
-          </Input>
-          <Input
-            id={"x"}
-            value={place.x}
-            onChange={(e) => setNewPlace({ ...place, x: e.target.value })}
-          >
-            Широта
-          </Input>
-          <Input
-            id={"y"}
-            value={place.y}
-            onChange={(e) => setNewPlace({ ...place, y: e.target.value })}
-          >
-            Долгота
-          </Input>
-        </section>
-        {editIndex !== null ? (
-          <button onClick={saveEditRecord}>Сохранить</button>
-        ) : (
-          <button onClick={addPlacemarkInArray}>Добавить</button>
-        )}
-        <button onClick={getMarks}>Получить маркера</button>
-        <ol className="listOfPlaces">
-          {places.map((place, index) => (
-            <div
-              className="liItems"
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-              onClick={() => itemClick(place)}
-              key={index}
+        <div className="conteinerInput">
+          <section className="inputs">
+            <Input
+              id={"nameP"}
+              value={place.name}
+              onChange={(e) => setNewPlace({ ...place, name: e.target.value })}
             >
-              Название: {place.name} X: {place.x} Y: {place.y}
-              {isHovered === index && (
-                <div>
-                  <button
-                    onMouseEnter={handleButtonMouseEnter}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={() => editPlacemark(place, index)}
-                  >
-                    Редактировать
-                  </button>
-                  <button
-                    onMouseEnter={handleButtonMouseEnter}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={() => deletePlacemark(place)}
-                  >
-                    Удалить
-                  </button>
+              Название
+            </Input>
+            <Input
+              id={"x"}
+              value={place.x}
+              onChange={(e) => setNewPlace({ ...place, x: e.target.value })}
+            >
+              Широта
+            </Input>
+            <Input
+              id={"y"}
+              value={place.y}
+              onChange={(e) => setNewPlace({ ...place, y: e.target.value })}
+            >
+              Долгота
+            </Input>
+          </section>
+          {editIndex !== null ? (
+              <button className="btnNotes btnSaveChange" onClick={saveEditRecord}>
+                Сохранить
+              </button>
+            ) : (
+              <button className="btnNotes btnAdd" onClick={addPlacemarkInArray}>
+                Добавить
+              </button>
+            )}
+        </div>
+        <div className="line"></div>
+        <div className="listContainer">
+          {isLoading ? (
+            <div className="loadingCircle"></div>
+          ) : (
+            <ol className="listOfPlaces">
+              {places.map((place, index) => (
+                <div
+                  className="liItem"
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => setMapCentr([place.x, place.y])}
+                  key={index}
+                >
+                  Название: {place.name} X: {place.x} Y: {place.y}
+                  {isHovered === index && (
+                    <div className="btnConteiner">
+                      <button
+                      className="hoverBtn btnEdit"
+                        onMouseEnter={handleButtonMouseEnter}
+                        onMouseLeave={handleButtonMouseLeave}
+                        onClick={() => editPlacemark(place, index)}
+                      >
+                        Редактировать
+                      </button>
+                      <button
+                      className="hoverBtn btnDelite"
+                        onMouseEnter={handleButtonMouseEnter}
+                        onMouseLeave={handleButtonMouseLeave}
+                        onClick={() => deletePlacemark(place)}
+                      >
+                        Удалить
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
-        </ol>
+              ))}
+            </ol>
+          )}
+        </div>
       </div>
       <div className="myMap">
         <YMaps

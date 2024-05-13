@@ -1,4 +1,4 @@
-import $api from "../http";
+import $api from "../http/Index.js";
 
 export default class Services {
   static async login(email, password) {
@@ -11,6 +11,10 @@ export default class Services {
 
   static async logout() {
     return $api.post("/logout");
+  }
+
+  static async getUsers() {
+    return $api.get("/getUsers");
   }
 
   static async getMarks(userId) {

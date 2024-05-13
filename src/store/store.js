@@ -1,27 +1,26 @@
 import axios from "axios";
-import Services from "../services/services";
-import { API_URL } from "../http";
-
+import Services from "../services/Services";
+import { API_URL } from "../http/Index";
 export default class Store {
-  user = { email: "", id: "" };
-  isAuth = false;
-
-  setAuth(bool) {
-    this.isAuth = bool;
-  }
+  user = { email: null, id: null, isAdmin: false, isAuth: false };
 
   setUser(inComingUser) {
     this.user.email = inComingUser.email;
     this.user.id = inComingUser.id;
+    this.user.isAdmin = inComingUser._isAdmin;
+  }
+
+  setAuth(bool) {
+    this.user.isAuth = bool;
   }
 
   async login(email, password) {
     try {
       const response = await Services.login(email, password);
-      console.log(response);
+      console.log(response.data.user);
       localStorage.setItem("token", response.data);
+      this.setUser(response.data.user);
       this.setAuth(true);
-      this.setUser(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -64,9 +63,9 @@ export default class Store {
     }
   }
 
-  async getMarks() {
+  async getMarks(userId) {
     try {
-      const response = await Services.getMarks(this.user.id);
+      const response = await Services.getMarks(userId);
       return response.data;
     } catch (e) {
       console.log(e);
@@ -84,17 +83,26 @@ export default class Store {
 
   async updateMark(mark) {
     try {
-      console.log(mark)
+      console.log(mark);
       const response = await Services.updateMark(mark);
       return response;
     } catch (e) {
       console.log(e);
     }
   }
-  
+
   async deleteMark(markId) {
     try {
       const response = await Services.deleteMark(markId);
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getUsers() {
+    try {
+      const response = await Services.getUsers();
       return response;
     } catch (e) {
       console.log(e);

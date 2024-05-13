@@ -1,6 +1,7 @@
-import Header from "../Header/header.js";
-import Footer from "../Footer/Footer.js";
-import MapBlock from "../MapBlock/MapBlock.js";
+import Header from "../header/Header.js";
+import Footer from "../footer/Footer.js";
+import MapBlock from "../mapBlock/MapBlock.js";
+
 export const MainPage = () => {
   return (
     <>

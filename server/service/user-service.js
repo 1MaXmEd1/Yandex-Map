@@ -2,6 +2,7 @@ const UserModel = require("../models/user-model.js");
 const bcrypt = require("bcrypt");
 const tokenService = require("./token-service.js");
 const UserDto = require("../dtos/user-dto.js");
+const MarkModel = require("../models/mark-model.js");
 
 class UserService {
   async registration(email, password) {
@@ -15,7 +16,7 @@ class UserService {
     const user = await UserModel.create({
       email,
       password: hashPassword,
-      isAdmin: false,
+      isAdmin: false
     });
 
     const userDto = new UserDto(user);
@@ -68,5 +69,4 @@ class UserService {
     return users;
   }
 }
-
 module.exports = new UserService();

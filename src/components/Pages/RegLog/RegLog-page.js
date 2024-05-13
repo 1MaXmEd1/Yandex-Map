@@ -1,6 +1,6 @@
 import "./RegLog.css";
 import "./logBlock/BlockAuth.js";
-import Button from "../../Button/Button.js";
+import Button from "../../button/Button.js";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { Context } from "../../../index.js";
@@ -10,9 +10,11 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
   const [password, setPassword] = useState("");
   const { store } = useContext(Context);
   const navigate = useNavigate();
+  
   const handleLogin = async () => {
     await store.login(email, password);
-    navigate("/")
+    console.log(store.user)
+    navigate("/");
   };
 
   return (

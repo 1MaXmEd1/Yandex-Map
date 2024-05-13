@@ -2,7 +2,7 @@ import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import Store from "./store/store";
+import Store from "./store/Store";
 
 const store = new Store();
 

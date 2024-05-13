@@ -7,7 +7,7 @@ router.post("/registration", controllers.registration);
 router.post("/login", controllers.login);
 router.post("/logout", controllers.logout);
 router.get("/refresh", controllers.refresh);
-router.get("/getUsers", adminAuth, controllers.getUsers);
+router.get("/getUsers",  controllers.getUsers);
 router.post("/marker", controllers.createMark);
 router.get("/marker", controllers.getMarks);
 router.put("/marker/:markId", controllers.updateMark);

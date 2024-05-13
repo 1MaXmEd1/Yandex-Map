@@ -28,7 +28,7 @@ class Controllers {
       console.log(`Ошибка в запросе входа: ${e}`);
     }
   }
-  async logout(req, res, next) {
+  async logout(req, res) {
     try {
       const { refreshToken } = req.cookies;
       const token = await userService.logout(refreshToken);
@@ -51,7 +51,7 @@ class Controllers {
       console.log(`Ошибка в запросе ответа: ${e}`);
     }
   }
-  async getUsers(req, res, next) {
+  async getUsers(req, res) {
     try {
       const users = await userService.getAllUsers();
       return res.json(users);
@@ -63,13 +63,11 @@ class Controllers {
   async createMark(req, res) {
     try {
       const { userId } = req.body;
-      const { place } = req.body;
-      const name = place.name;
-      const x = place.x;
-      const y = place.y;
-      const mark = await MarkModel.create({ userId, name, x, y });
+      const { name, x, y } = req.body.mark;
 
-      return res.json(mark);
+      const newMark = await MarkModel.create({ userId, name, x, y });
+
+      return res.json(marker);
     } catch (e) {
       console.error(`Ошибка в запросе создания: ${e}`);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });

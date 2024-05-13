@@ -10,6 +10,7 @@ module.exports = class UserDto {
 
     this.email = module.email;
     this.id = module._id;
+    this._isAdmin = module.isAdmin
   }
 
   get getEmail() {
@@ -18,5 +19,13 @@ module.exports = class UserDto {
 
   get getId() {
     return this.id;
+  }
+  
+  get isAdmin() {
+    return this._isAdmin;
+  }
+
+  set isAdmin(value){
+    return this._isAdmin = value;
   }
 };

@@ -1,4 +1,4 @@
-import "../logBlock/BlockAuth.css";
+import "./BlockAuth.css";
 
 export default function BlockAuth({ children }) {
   return (

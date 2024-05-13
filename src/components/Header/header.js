@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Context } from "../..";
-import Button from "../Button/Button";
-import "./header.css";
+import Button from "../button/Button";
+import "./Header.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
@@ -15,6 +15,13 @@ export default function Header() {
     await store.logout();
     setIsLoggedOut(true);
   };
+  
+  const handleAdmin = () => {
+    navigate("/admin")
+  };
+  const handleLogin = () => {
+    navigate("/login")
+  };
 
   return (
     <header className="header">
@@ -23,15 +30,15 @@ export default function Header() {
       </div>
 
       <section className="buttonGroup">
-        {store.isAuth && !isLoggedOut
+        {store.user.isAdmin && (<Button fun={handleAdmin}>Админ панель</Button>)}
+        {store.user.isAuth && !isLoggedOut
           ? `Добро пожаловать ${store.user.email}`
           : "Авторизуйтесь!"}
-        {store.isAuth && !isLoggedOut ? (
-          <Button className="logout" fun={handleLogout}>Выйти</Button>
+        {store.user.isAuth && !isLoggedOut ? (
+          <Button fun={handleLogout}>Выйти</Button>
         ) : (
           <Button
-            fun={() => navigate("login", { replace: false })}
-            className="login"
+            fun={handleLogin}
           >
             Вход
           </Button>

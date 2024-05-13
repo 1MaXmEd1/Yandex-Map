@@ -4,7 +4,7 @@ module.exports = function (req, res, next) {
   try {
     const admin = req.headers.authorization;
     if (!admin) {
-      return res.status(401).json({ message: "Отсутствует токен авторизации" });
+      return res.status(401).json({ message: "Отсутствует доступ" });
     }
 
     const accessToken = admin.split(" ")[1];
