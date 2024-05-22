@@ -10,10 +10,10 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
   const [password, setPassword] = useState("");
   const { store } = useContext(Context);
   const navigate = useNavigate();
-  
+
   const handleLogin = async () => {
     await store.login(email, password);
-    console.log(store.user)
+    console.log(store.user);
     navigate("/");
   };
 
@@ -48,9 +48,7 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
           </div>
           <div className="btnBlock">
             {/* Нужно придумать как менять функцию у кнопки */}
-            <Button fun={handleLogin}>
-              {butt}
-            </Button>
+            <Button fun={handleLogin}>{butt}</Button>
           </div>
           <div className="descBlock">
             <p className="desc">

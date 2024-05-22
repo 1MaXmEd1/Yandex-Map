@@ -5,7 +5,6 @@ import "./Header.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-
   const navigate = useNavigate();
 
   const { store } = useContext(Context);
@@ -15,35 +14,40 @@ export default function Header() {
     await store.logout();
     setIsLoggedOut(true);
   };
-  
+
   const handleAdmin = () => {
-    navigate("/admin")
+    navigate("/admin");
   };
   const handleLogin = () => {
-    navigate("/login")
+    navigate("/login");
   };
 
   return (
     <header className="header">
-      <div className="textBoxLogo">
-        <h1>My Yndex Maps</h1>
+      <div className="logoName">
+        <div className="textBoxLogo">
+          <h1>My Yndex Maps</h1>
+        </div>
       </div>
-
-      <section className="buttonGroup">
-        {store.user.isAdmin && (<Button fun={handleAdmin}>Админ панель</Button>)}
-        {store.user.isAuth && !isLoggedOut
-          ? `Добро пожаловать ${store.user.email}`
-          : "Авторизуйтесь!"}
-        {store.user.isAuth && !isLoggedOut ? (
-          <Button fun={handleLogout}>Выйти</Button>
-        ) : (
-          <Button
-            fun={handleLogin}
-          >
-            Вход
-          </Button>
-        )}
-      </section>
+      <div className="interectiveBlock">
+        <div className="helloingBox">
+          <p className="helloingTxt">
+            {store.user.isAuth && !isLoggedOut
+              ? `Добро пожаловать ${store.user.email}`
+              : "Вы не авторизованы!"}
+          </p>
+        </div>
+        <div className="buttonGroup">
+          {store.user.isAdmin && (
+            <Button fun={handleAdmin}>Админ панель</Button>
+          )}
+          {store.user.isAuth && !isLoggedOut ? (
+            <Button fun={handleLogout}>Выйти</Button>
+          ) : (
+            <Button fun={handleLogin}>Вход</Button>
+          )}
+        </div>
+      </div>
     </header>
   );
 }

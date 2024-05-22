@@ -59,15 +59,12 @@ class Controllers {
       console.log(`Ошибка в запросе получения пользователей: ${e}`);
     }
   }
-  //подредачить получение из req
   async createMark(req, res) {
     try {
       const { userId } = req.body;
       const { name, x, y } = req.body.mark;
-
       const newMark = await MarkModel.create({ userId, name, x, y });
-
-      return res.json(marker);
+      return res.json(newMark);
     } catch (e) {
       console.error(`Ошибка в запросе создания: ${e}`);
       return res.status(500).json({ message: "Внутренняя ошибка сервера" });
@@ -86,7 +83,9 @@ class Controllers {
   async updateMark(req, res) {
     try {
       const { mark } = req.body;
-      const updatedMark = await MarkModel.findByIdAndUpdate(mark._id, mark, { new: true });
+      const updatedMark = await MarkModel.findByIdAndUpdate(mark._id, mark, {
+        new: true,
+      });
       return res.json(updatedMark);
     } catch (e) {
       console.error(`Ошибка в запросе обновления: ${e}`);
