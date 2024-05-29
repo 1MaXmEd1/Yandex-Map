@@ -16,7 +16,7 @@ class UserService {
     const user = await UserModel.create({
       email,
       password: hashPassword,
-      isAdmin: false
+      isAdmin: false,
     });
 
     const userDto = new UserDto(user);

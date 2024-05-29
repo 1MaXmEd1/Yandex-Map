@@ -39,12 +39,12 @@ export default function Header() {
         </div>
         <div className="buttonGroup">
           {store.user.isAdmin && (
-            <Button fun={handleAdmin}>Админ панель</Button>
+            <Button onClick={handleAdmin}>Админ панель</Button>
           )}
           {store.user.isAuth && !isLoggedOut ? (
-            <Button fun={handleLogout}>Выйти</Button>
+            <Button onClick={handleLogout}>Выйти</Button>
           ) : (
-            <Button fun={handleLogin}>Вход</Button>
+            <Button onClick={handleLogin}>Вход</Button>
           )}
         </div>
       </div>

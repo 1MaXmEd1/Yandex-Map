@@ -13,7 +13,6 @@ class TokenService {
       refreshToken,
     };
   }
-
   validateAccessToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_ACESS_SECRET);
@@ -22,7 +21,6 @@ class TokenService {
       return null;
     }
   }
-
   validateRefreshToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
@@ -31,7 +29,6 @@ class TokenService {
       return null;
     }
   }
-
   async saveToken(userId, refreshToken) {
     const tokenData = await tokenModel.findOne({ user: userId });
     if (tokenData) {

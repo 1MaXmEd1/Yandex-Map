@@ -7,7 +7,7 @@ import Store from "./store/Store";
 const store = new Store();
 
 export const Context = createContext({
-  store
+  store,
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

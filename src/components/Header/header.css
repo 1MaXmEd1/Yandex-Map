@@ -13,9 +13,6 @@
     position: absolute;
     display: flex;
 }
-.textBoxLogo{
-    
-}
 .helloingBox{
     margin: 5px 10px 5px 0px;
     display: flex;
@@ -50,4 +47,7 @@
 .logout:active{
     background: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
+}
+.hhh{
+    border-color: #ffffff;
 }

@@ -37,7 +37,7 @@ function App() {
             path="/admin"
             element={store.user.isAdmin ? <AdminPanel /> : <MainPage />}
           />
-        </Routes>
+          </Routes>
       </BrowserRouter>
     </>
   );

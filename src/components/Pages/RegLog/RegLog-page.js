@@ -17,6 +17,12 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
     navigate("/");
   };
 
+  const handleRegister = async () => {
+    await store.register(email, password);
+    console.log(store.user);
+    navigate("/");
+  };
+
   return (
     <>
       <div className="workZone">
@@ -47,8 +53,11 @@ const RegAndLog = (index, butt, desc, link, linkd) => {
             ></input>
           </div>
           <div className="btnBlock">
-            {/* Нужно придумать как менять функцию у кнопки */}
-            <Button fun={handleLogin}>{butt}</Button>
+            {index === "Вход" ? (
+              <Button onClick={handleLogin}>{butt}</Button>
+            ) : (
+              <Button onClick={handleRegister}>{butt}</Button>
+            )}
           </div>
           <div className="descBlock">
             <p className="desc">

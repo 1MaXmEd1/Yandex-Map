@@ -49,8 +49,8 @@ export const AdminPanel = () => {
     <div>
       <div className="he">
       <h1>Список зарегистрированных пользователей</h1>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-        <Button fun={handleOut}>Выйти из панели</Button>
+      <div className="btnBlock">
+        <Button onClick={handleOut}>Выйти из панели</Button>
       </div>
       </div>
       <table>

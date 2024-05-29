@@ -5,6 +5,9 @@
   background:rgb(255, 255, 255);
   border-radius:5px
 }
+.massage{
+  padding: 100% 0px 50% 10%;
+}
 .conteinerInput{
   border-radius:5px 5px 0px 0px ;
 }
@@ -59,9 +62,8 @@
   cursor: pointer;
 }
 .myMap{
-  width: 1700px;
-  height: 730px;
-  margin: 10px 10px 10px 10px;
+  width: 100%;
+  margin: 10px;
 }
 .btnNotes{
   width: 100%;
@@ -69,7 +71,7 @@
   padding: auto;
   border: none;
   margin: 3px 0px 0px 0px;
-  padding: 0px 0px 0px 0px;
+  padding: 0px;
 }
 .loadingCircle {
   display: inline-block;

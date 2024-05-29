@@ -1,13 +1,13 @@
 const Router = require("express");
 const router = new Router();
 const controllers = require("../controllers/controllers.js");
-const adminAuth = require("../middlewares/admin-auth.js");
+const adminAuth = require("../middleware/admin-auth.js");
 
 router.post("/registration", controllers.registration);
 router.post("/login", controllers.login);
 router.post("/logout", controllers.logout);
 router.get("/refresh", controllers.refresh);
-router.get("/getUsers",  controllers.getUsers);
+router.get("/getUsers", adminAuth, controllers.getUsers);
 router.post("/marker", controllers.createMark);
 router.get("/marker", controllers.getMarks);
 router.put("/marker/:markId", controllers.updateMark);
