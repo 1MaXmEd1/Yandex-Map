@@ -1,14 +1,18 @@
-const UserModel = require("../models/user-model.js");
+const UserModel = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
-const tokenService = require("./token-service.js");
-const UserDto = require("../dtos/user-dto.js");
-const MarkModel = require("../models/mark-model.js");
+const tokenService = require("./tokenService.js");
+const UserDto = require("../dtos/userDto.js");
+const ApiError = require("../exceptions/apiError.js");
 
 class UserService {
   async registration(email, password) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw ApiError.NotAcceptable(`Неверный формат электронной почты`);
+    }
     const candidate = await UserModel.findOne({ email });
     if (candidate) {
-      throw new Error(
+      throw ApiError.BadRequest(
         `Пользователь с почтовым адресом ${email} уже существует`
       );
     }
@@ -27,13 +31,19 @@ class UserService {
   }
 
   async login(email, password) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw ApiError.NotAcceptable(`Неверный формат электронной почты`);
+    }
     const user = await UserModel.findOne({ email });
     if (!user) {
-      throw new Error(`Пользователь с почтовым адресом ${email} не найден`);
+      throw ApiError.NotFound(
+        `Пользователь с почтовым адресом ${email} не найден`
+      );
     }
     const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
-      throw new Error(`Неверный пароль`);
+      throw ApiError.BadRequest(`Неверный пароль`);
     }
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
@@ -49,12 +59,12 @@ class UserService {
 
   async refresh(refreshToken) {
     if (!refreshToken) {
-      throw new Error(`Вы не авторизованы`);
+      throw ApiError.Unauthorized(`Пользователь не авторизован`);
     }
     const userData = tokenService.validateRefreshToken(refreshToken);
     const tokenFromDb = await tokenService.findToken(refreshToken);
     if (!userData || !tokenFromDb) {
-      throw new Error(`Вы не авторизованы`);
+      throw ApiError.Unauthorized(`Пользователь не авторизован`);
     }
     const user = await UserModel.findById(userData.id);
     const userDto = new UserDto(user);

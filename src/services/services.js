@@ -1,4 +1,4 @@
-import $api from "../http/Index.js";
+import $api from "../http/axiosConfig.js";
 
 export default class Services {
   static async login(email, password) {

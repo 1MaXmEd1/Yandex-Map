@@ -1,16 +1,17 @@
 const Router = require("express");
 const router = new Router();
-const controllers = require("../controllers/controllers.js");
-const adminAuth = require("../middleware/admin-auth.js");
+const userControllers = require("../controllers/userControllers.js");
+const markControllers = require("../controllers/markControllers.js");
+const adminAuth = require("../middleware/adminAuth.js");
 
-router.post("/registration", controllers.registration);
-router.post("/login", controllers.login);
-router.post("/logout", controllers.logout);
-router.get("/refresh", controllers.refresh);
-router.get("/getUsers", adminAuth, controllers.getUsers);
-router.post("/marker", controllers.createMark);
-router.get("/marker", controllers.getMarks);
-router.put("/marker/:markId", controllers.updateMark);
-router.delete("/marker/:markId", controllers.deleteMark);
+router.post("/registration", userControllers.registration);
+router.post("/login", userControllers.login);
+router.post("/logout", userControllers.logout);
+router.get("/refresh", userControllers.refresh);
+router.get("/getUsers", adminAuth, userControllers.getUsers);
+router.post("/marker", markControllers.createMark);
+router.get("/marker", markControllers.getMarks);
+router.put("/marker/:markId", markControllers.updateMark);
+router.delete("/marker/:markId", markControllers.deleteMark);
 
 module.exports = router;

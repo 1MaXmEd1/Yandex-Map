@@ -1,5 +1,5 @@
-import "./Input.css";
-export default function Input({ children, id, value, onChange }) {
+import "./input.css";
+export const Input = ({ children, id, value, onChange }) => {
   return (
     <input
       className="input"
@@ -9,4 +9,5 @@ export default function Input({ children, id, value, onChange }) {
       onChange={onChange}
     ></input>
   );
-}
+};
+export default Input;

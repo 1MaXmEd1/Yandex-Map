@@ -1,0 +1,10 @@
+.main{
+    margin: auto;
+    height: 74%;
+}
+.mapBlock{
+    border-radius:0px 0px 0px 0px;
+    display: flex;
+    background: rgb(218, 198, 19);
+    height: 100%;
+}

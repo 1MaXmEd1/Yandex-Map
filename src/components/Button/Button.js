@@ -1,9 +1,10 @@
-import "./Button.css";
+import "./button.css";
 
-export default function Button({ children, onClick, onChange }) {
+const Button = ({ children, onClick, onChange }) => {
   return (
     <button onClick={onClick} onChange={onChange} className="button">
       {children}
     </button>
   );
-}
+};
+export default Button;

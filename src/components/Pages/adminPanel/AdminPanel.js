@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../..";
-import "./AdminPanel.css";
-import Button from "../../button/Button";
+import "./adminPanel.css";
+import Button from "../../button/button";
 import { useNavigate } from "react-router-dom";
 
-export const AdminPanel = () => {
+const AdminPanel = () => {
+  const { store } = useContext(Context);
   const [users, setUsers] = useState([]);
   const [expandedUserId, setExpandedUserId] = useState(null);
-  const { store } = useContext(Context);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -15,8 +15,8 @@ export const AdminPanel = () => {
       try {
         const response = await store.getUsers();
         setUsers(response.data);
-      } catch (error) {
-        console.error("Ошибка при загрузке пользователей: ", error);
+      } catch (e) {
+        alert("Ошибка при загрузке пользователей: ", e);
       }
     };
 
@@ -35,23 +35,24 @@ export const AdminPanel = () => {
             user._id === userId ? { ...user, markers: userMarkers } : user
           )
         );
-      } catch (error) {
-        console.error("Ошибка при загрузке маркеров пользователя: ", error);
+      } catch (e) {
+        alert("Ошибка при загрузке маркеров пользователя: ", e);
       }
     }
   };
-
-  const handleOut = () =>{
+  const handleOut = () => {
     navigate("/");
-  }
+  };
 
   return (
-    <div>
-      <div className="he">
-      <h1>Список зарегистрированных пользователей</h1>
-      <div className="btnBlock">
-        <Button onClick={handleOut}>Выйти из панели</Button>
-      </div>
+    <>
+      <div className="head">
+        <div>
+          <h1>Список зарегистрированных пользователей</h1>
+        </div>
+        <div className="bBlock">
+          <Button onClick={handleOut}>Выйти из панели</Button>
+        </div>
       </div>
       <table>
         <thead>
@@ -70,7 +71,7 @@ export const AdminPanel = () => {
                 <td>{user._id}</td>
                 <td>{user.email}</td>
                 <td>
-                  <Button fun={() => handleExpand(user._id)}>
+                  <Button onClick={() => handleExpand(user._id)}>
                     {expandedUserId === user._id ? "Свернуть" : "Развернуть"}
                   </Button>
                   {expandedUserId === user._id && (
@@ -80,11 +81,11 @@ export const AdminPanel = () => {
                           <th>#</th>
                           <th>ID места</th>
                           <th>Название</th>
-                          <th>X</th>
-                          <th>Y</th>
+                          <th>Широта</th>
+                          <th>Долгота</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <thead>
                         {user.markers?.map((marker, index) => (
                           <tr key={marker._id}>
                             <td>{index + 1}</td>
@@ -94,7 +95,7 @@ export const AdminPanel = () => {
                             <td>{marker.y}</td>
                           </tr>
                         ))}
-                      </tbody>
+                      </thead>
                     </table>
                   )}
                 </td>
@@ -103,6 +104,7 @@ export const AdminPanel = () => {
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 };
+export default AdminPanel;

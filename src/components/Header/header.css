@@ -1,53 +1,60 @@
 .header{
-    display: flex;
     background: rgb(218, 198, 19);
     border-radius:10px 10px 0px 0px;
     justify-content: center;
     align-items: center;
+    height: 13%;
+}
+.sliceOne{
+    display: flex;
+    height: 55%;
+}
+.sliceTwo{
+    background:rgb(255, 255, 255);
+    display: flex;
+    height: 50%;
 }
 .logoName{
     display: flex;
+    margin: auto;
 }
-.interectiveBlock{
-    right: 0;
-    position: absolute;
+.interactiveBlock{
     display: flex;
+    margin-top: 4px;
 }
-.helloingBox{
+.greetingBox{
     margin: 5px 10px 5px 0px;
     display: flex;
     padding: 0px 5px 0px 5px;
     background-color:#ffffff;
     border-radius:10px;
+    height: 80%;
 }
-.helloingTxt{
-    margin: 20px 0px 10px 0px;
+.greetingText{
+    margin: auto;
+    padding: auto;
+    width: max-content;
+    height:max-content ;
 }
 .buttonGroup{
     display: flex;
     margin: 5px 10px 5px 0px;
+    padding-bottom: 1px;
     background-color:#ffffff;
     border-radius:10px;
+    height: 80%;
 }
 .login:hover{
     opacity: 0.8;
 }
-.login:active{
-    background: rgb(0, 0, 0);
-    color: white;
+.descriptionBlock{
+    margin: auto;
+    display: flex;
+    height: 60px;
 }
-
-.logout{
-    background-color: black;
-    color: white;
-}
-.logout:hover{
-    opacity: 0.8;
-}
-.logout:active{
-    background: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
-}
-.hhh{
-    border-color: #ffffff;
+.descriptionText{
+    width: 1500px;
+    margin: auto;
+    text-align: center;
+    font-size: 18px;
 }

@@ -4,6 +4,8 @@ const cors = require("cors");
 const router = require("./router/router.js");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const errormiddleware = require("./middleware/errorMiddleware.js")
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -16,6 +18,7 @@ app.use(
   })
 );
 app.use("/api", router);
+app.use(errormiddleware)
 const start = async () => {
   try {
     await mongoose.connect(process.env.DB);

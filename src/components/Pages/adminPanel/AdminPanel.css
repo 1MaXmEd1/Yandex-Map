@@ -3,13 +3,19 @@
   margin-top: 20px;
   padding-top: 20px;
 }
-  
+.head{
+  display: flex;
+}
+.bBlock{
+  margin: auto 10px auto auto;
+}
 table{
   width: 100%;
   border-collapse: collapse;
 }
   
 th, td{
+  text-align: center;
   padding: 8px;
   border-bottom: 1px solid #ccc;
 }

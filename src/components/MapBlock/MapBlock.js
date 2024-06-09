@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import "./MapBlock.css";
-import Input from "../input/Input.js";
+import "./mapBlock.css";
+import Input from "../input/input.js";
 import {
   YMaps,
   Map,
@@ -8,6 +8,8 @@ import {
   Placemark,
 } from "@pbe/react-yandex-maps";
 import { Context } from "../../index.js";
+import LoadingCricle from "../loadingCricle/loadingCricle.js";
+import { observer } from "mobx-react-lite";
 
 const MapBlock = () => {
   const { store } = useContext(Context);
@@ -24,6 +26,8 @@ const MapBlock = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [map, setMap] = useState(null);
+
   const handleGeoClick = (event) => {
     const position = event.get("geoObjects");
     setMapCentr(position);
@@ -34,24 +38,20 @@ const MapBlock = () => {
   };
 
   const addPlacemarkInArray = () => {
-    if (!isNaN(place.x) && !isNaN(place.y)) {
-      if (place.name && place.x && place.y) {
-        setPlace([...places, place]);
-        store.createMark(place);
-
-        setNewPlace({ name: "", x: "", y: "" });
-      } else {
-        alert("Ошибка: Введите корректные данные для X и Y.");
-      }
-    } else {
-      alert("Ошибка: X и Y должны быть числами.");
-    }
+    store.createMark(place);
+    setNewPlace({ name: "", x: "", y: "" });
+    setTimeout(() => {
+      getMarks();
+    }, 100);
   };
 
   const deletePlacemark = (placeToDelete) => {
     const deletePlace = places.filter((place) => place !== placeToDelete);
     setPlace(deletePlace);
     store.deleteMark(placeToDelete._id);
+    setTimeout(() => {
+      getMarks();
+    }, 500);
   };
 
   const editPlacemark = (place, index) => {
@@ -60,88 +60,97 @@ const MapBlock = () => {
   };
 
   const saveEditRecord = async () => {
-    if (!isNaN(place.x) && !isNaN(place.y)) {
-      if (place.name && place.x && place.y) {
-        const updatedPlaces = [...places];
-        updatedPlaces[editIndex] = place;
-        setPlace(updatedPlaces);
-        await store.updateMark(place);
-        getMarks();
-        setEditIndex(null);
+    const updatedPlaces = [...places];
+    updatedPlaces[editIndex] = place;
+    setPlace(updatedPlaces);
+    await store.updateMark(place);
+    setTimeout(() => {
+      getMarks();
+    }, 100);
+    setEditIndex(null);
 
-        setNewPlace({ name: "", x: "", y: "" });
-      }
-    } else {
-      alert("Ошибка: широта и долгота должны быть числами.");
-    }
+    setNewPlace({ name: "", x: "", y: "" });
   };
 
   const getMarks = async () => {
-    try {
-      setIsLoading(true);
-      const response = await store.getMarks(store.user.id);
-      setPlace(response);
-      setIsLoading(false);
-    } catch (e) {
-      console.log("Получение маркеров. Неудача" + e);
-    }
+    setIsLoading(true);
+    const response = await store.getMarks(store.user.id);
+    setPlace(response);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    if (store.user.isAuth) {
+    if (store.isAuth) {
       getMarks();
-    } else {
-      console.log("Залогиньтесь!");
-      setPlace([]);
     }
-  }, [store]);
+  }, [store.isAuth]);
+
+  useEffect(() => {
+    const resizeListener = () => {
+      if (map) {
+        map.container.fitToViewport();
+      }
+    };
+    window.addEventListener("resize", resizeListener);
+
+    return () => {
+      window.removeEventListener("resize", resizeListener);
+    };
+  }, [map]);
 
   return (
     <>
       <div className="conteinerList">
-        {store.user.isAuth ?
-          (<>
+        {store.isAuth ? (
+          <>
             <div className="conteinerInput">
-            <section className="inputs">
-              <Input
-                id={"nameP"}
-                value={place.name}
-                onChange={(e) => setNewPlace({ ...place, name: e.target.value })}
-              >
-                Название
-              </Input>
-              <Input
-                id={"x"}
-                value={place.x}
-                onChange={(e) => setNewPlace({ ...place, x: e.target.value })}
-              >
-                Широта
-              </Input>
-              <Input
-                id={"y"}
-                value={place.y}
-                onChange={(e) => setNewPlace({ ...place, y: e.target.value })}
-              >
-                Долгота
-              </Input>
-            </section>
-            {editIndex !== null ? (
-              <button className="btnNotes btnSaveChange" onClick={saveEditRecord}>
-                Сохранить
-              </button>
-            ) : (
-              <button className="btnNotes btnAdd" onClick={addPlacemarkInArray}>
-                Добавить
-              </button>
-            )}
+              <section className="inputs">
+                <Input
+                  id={"nameP"}
+                  value={place.name}
+                  onChange={(e) =>
+                    setNewPlace({ ...place, name: e.target.value })
+                  }
+                >
+                  Название
+                </Input>
+                <Input
+                  id={"x"}
+                  value={place.x}
+                  onChange={(e) => setNewPlace({ ...place, x: e.target.value })}
+                >
+                  Широта
+                </Input>
+                <Input
+                  id={"y"}
+                  value={place.y}
+                  onChange={(e) => setNewPlace({ ...place, y: e.target.value })}
+                >
+                  Долгота
+                </Input>
+              </section>
+              {editIndex !== null ? (
+                <button
+                  className="btnNotes btnSaveChange"
+                  onClick={saveEditRecord}
+                >
+                  Сохранить
+                </button>
+              ) : (
+                <button
+                  className="btnNotes btnAdd"
+                  onClick={addPlacemarkInArray}
+                >
+                  Добавить
+                </button>
+              )}
             </div>
             <div className="line"></div>
             <div className="listContainer">
-            {isLoading ? (
-              <div className="loadingCircle"></div>
-            ) : (
-              <ol className="listOfPlaces">
-                <div>
+              {isLoading ? (
+                <LoadingCricle></LoadingCricle>
+              ) : (
+                <ol className="listOfPlaces">
                   {places.map((place, index) => (
                     <div className="liItem" key={index}>
                       <div
@@ -191,52 +200,54 @@ const MapBlock = () => {
                       </div>
                     </div>
                   ))}
-                </div>
-              </ol>
-            )}
+                </ol>
+              )}
             </div>
-          </>) : (
+          </>
+        ) : (
           <div className="massage">
-            <p>Чтобы использовать функционал войдите или создайте аккаунт!</p>
+            <p>Чтобы использовать функционал войдите в аккаунт!</p>
           </div>
-          )
-        }
+        )}
       </div>
       <div className="myMap">
-        <YMaps
-          query={{
-            apikey: "22d60574-cd10-4610-874a-725231d87fb6",
-            provider: "browser",
-          }}
-        >
-          <Map
-            onChange={itemClick}
-            style={{ width: "100%", height: "100%" }}
-            defaultState={{ center: mapCentr, zoom: 9 }}
-            state={{ center: mapCentr, zoom: 9 }}
+        <div className="mapContainer">
+          <YMaps
+            query={{
+              apikey: "22d60574-cd10-4610-874a-725231d87fb6",
+              provider: "browser",
+            }}
           >
-            <GeolocationControl
-              locationchange={handleGeoClick}
-              options={{ float: "left" }}
-            />
-            {places.map((place, placeMark) => (
-              <Placemark
-                key={placeMark}
-                geometry={[place.x, place.y]}
-                modules={["geoObject.addon.balloon"]}
-                options={{ preset: "islands#icon" }}
-                properties={{
-                  balloonContent: balloonContent,
-                }}
-                onClick={() => setBalloonContent(place.name)}
-                onClose={() => setBalloonContent(null)}
+            <Map
+              instanceRef={(ref) => setMap(ref)}
+              onChange={itemClick}
+              style={{ width: "100%", height: "100%" }}
+              defaultState={{ center: mapCentr, zoom: 9 }}
+              state={{ center: mapCentr, zoom: 9 }}
+            >
+              <GeolocationControl
+                locationchange={handleGeoClick}
+                options={{ float: "left" }}
               />
-            ))}
-          </Map>
-        </YMaps>
+              {places.map((place, placeMark) => (
+                <Placemark
+                  key={placeMark}
+                  geometry={[place.x, place.y]}
+                  modules={["geoObject.addon.balloon"]}
+                  options={{ preset: "islands#icon" }}
+                  properties={{
+                    balloonContent: balloonContent,
+                  }}
+                  onClick={() => setBalloonContent(place.name)}
+                  onClose={() => setBalloonContent(null)}
+                />
+              ))}
+            </Map>
+          </YMaps>
+        </div>
       </div>
     </>
   );
 };
 
-export default MapBlock;
+export default observer(MapBlock);

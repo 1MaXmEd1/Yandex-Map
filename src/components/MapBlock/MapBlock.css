@@ -1,12 +1,15 @@
 .conteinerList{
-  width: 400px;
-  height: 730px;
+  width: 20%;
+  min-width: 400px;
+  height: 97%;
   margin: 10px 5px 10px 10px;
   background:rgb(255, 255, 255);
   border-radius:5px
 }
 .massage{
-  padding: 100% 0px 50% 10%;
+  width: 90%;
+  margin: auto;
+  margin-top: 80%;
 }
 .conteinerInput{
   border-radius:5px 5px 0px 0px ;
@@ -21,14 +24,14 @@
 }
 .listOfPlaces {
   max-height: 600px;
-  padding-left: 20px;
+  padding-left: 0px;
 }
 .liItem {
   display: flex; 
   align-items: center; 
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin: 10px 0; 
+  margin: auto;
   padding: 10px; 
   width: 350px; 
   box-sizing: border-box;
@@ -61,9 +64,14 @@
 .iDelite{
   cursor: pointer;
 }
-.myMap{
+.myMap {
   width: 100%;
-  margin: 10px;
+  height: 97%;
+  margin: 10px 5px 10px 11px;
+  display: flex;
+}
+.mapContainer {
+  width: 99%;
 }
 .btnNotes{
   width: 100%;
@@ -72,17 +80,6 @@
   border: none;
   margin: 3px 0px 0px 0px;
   padding: 0px;
-}
-.loadingCircle {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  border: 3px solid rgba(0, 0, 0, 0.3);
-  border-radius: 50%;
-  border-top-color: #3498db;
-  animation: spin 1s infinite linear;
-  margin-left: 50%;
-  margin-top: 50%;
 }
 .line{
   border: solid rgba(112, 112, 112, 0.288) 0.5px;

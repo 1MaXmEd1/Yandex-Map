@@ -1,5 +1,6 @@
-import "./Footer.css";
+import "./footer.css";
 
-export default function Footer() {
+const Footer = () => {
   return <footer className="footer"></footer>;
-}
+};
+export default Footer;
