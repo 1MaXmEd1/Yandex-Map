@@ -38,22 +38,24 @@ const Header = () => {
           </div>
         </div>
         <div className="interactiveBlock">
-          <div className="greetingBox">
-            <p className="greetingText">
-              {store.isAuth
-                ? `Добро пожаловать, ${store.user.email}!`
-                : "Вы не авторизованы!"}
-            </p>
-          </div>
-          <div className="buttonGroup">
-            {store.user.isAdmin && (
-              <Button onClick={handleAdmin}>Админ панель</Button>
-            )}
-            {store.isAuth ? (
-              <Button onClick={handleLogout}>Выйти</Button>
-            ) : (
-              <Button onClick={handleLogin}>Вход</Button>
-            )}
+          <div className="interactiveGroup">
+            <div className="greetingBox">
+              <p className="greetingText">
+                {store.isAuth
+                  ? `Добро пожаловать, ${store.user.email}!`
+                  : "Вы не авторизованы!"}
+              </p>
+            </div>
+            <div className="buttonGroup">
+              {store.user.isAdmin && (
+                <Button onClick={handleAdmin}>Админ панель</Button>
+              )}
+              {store.isAuth ? (
+                <Button onClick={handleLogout}>Выйти</Button>
+              ) : (
+                <Button onClick={handleLogin}>Вход</Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

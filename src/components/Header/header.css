@@ -17,10 +17,20 @@
 .logoName{
     display: flex;
     margin: auto;
+    height: 100%;
+    width: 70%;
+}
+.textBoxLogo{
+    margin: auto;
 }
 .interactiveBlock{
     display: flex;
     margin-top: 4px;
+    width: 30%;
+}
+.interactiveGroup{
+    display: flex;
+    margin-left: auto;
 }
 .greetingBox{
     margin: 5px 10px 5px 0px;
